@@ -50,7 +50,7 @@ In practice, however, you’ll often want to retrieve only a subset of those rec
 ### Deleting QuerySets - examples
 - `Post.objects.get(id=1).delete()`: Deletes all objects from the datatable which `id` field matches the number 1.
 
-### Complex lookups with Q objects
+### Complex lookups with `Q` objects
 When you do 
 ```
 Post.objects.filter(publish__year=2024).filter(author__username='admin')
