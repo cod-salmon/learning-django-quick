@@ -104,6 +104,7 @@ author = models.ForeignKey(
 )
 ```
 Django automatically creates another column in your table:
+
 ![](./pics/model-db-table-author-id.png)
 
 where the `author_id` matches the `User` model's ID. This is nice, as now you can type
