@@ -113,3 +113,117 @@ Grab the URL and open it in your browser. You should see something like this:
 ![](./pics/creating-project-django.png)
 
 That is cool.
+
+
+## Creating a Django app
+Once you have the Django project, you can add functionality by creating apps. Each app represents different parts of a website. How you structure each app is up to you; however, the following command will give provide you with some basic structure.
+```
+python manage.py startapp blog
+```
+It adds a new folder under `mysite/`, at the level of `mysite/mysite/`, called `blog/`: 
+```
+mysite/
+    manage.py
+    mysite/
+        __init__.py
+        asgi.py
+        settings.py
+        urls.py
+        wsgi.py
+    blog/
+        __init__.py
+        admin.py
+        apps.py
+        migrations/
+            __init__.py
+        models.py
+        tests.py
+        views.py
+```
+
+--- 
+
+### The MTV pattern
+Before diving into the app files, it is important to understand Django’s Model–Template–View (MTV) architecture. Django follows the MTV or Model-Template-View pattern. It basically consists on the following: 
+- We have a database, which is accessed through the **Model**. 
+- The **View** uses the **Model** to retrieve data, and then 
+- passes that data to the **Template**, which renders it for the user. 
+
+In a step-by-step flow:
+1. User makes a request
+2. URL routes to a View
+3. View queries the Model
+4. Model fetches data from the database
+5. View sends data to Template
+6. Template renders HTML
+7. Response goes back to the user
+
+Within a single application, you may have multiple URLs mapping to different Views, Views interacting with one or more Models, and Views rendering different Templates. All models typically use the same project-level database, however multiple multiple databases can also be configured. The most general flow diagram I can think of looks like the following:
+
+![](./pics/app.png)
+
+Now hopefully we can move on to the Django application structure, with a bit more perspective...
+
+--- 
+
+### The Application structure
+Bringing back here the `blog` application we just created:
+```
+blog/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+```
+
+#### `views.py` 
+The file contains the logic of the application. Each view receives an HTTP request, processes it and returns a response.
+#### `models.py` 
+This file contains the data models of the application. Each model typically corresponds to a database table. Django automatically maps models to the database.
+#### `apps.py` 
+The file contains the main configuration of the application. One example for our `blog` app would be the following:
+```
+from django.apps import AppConfig
+
+class BlogConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'blog'
+```
+For Django to recognize your app, it must be added to `INSTALLED_APPS` in `settings.py`; so we would then write:
+```
+# settings.py
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    ...
+    'blog.apps.BlogConfig'
+]
+```
+at the end of the `INSTALLED_APPS` list.
+
+#### `migrations/` 
+This folder contains the database migrations of the aplication. There are two main commands when dealing with migrations:
+```
+python manage.py makemigrations blog
+```
+Creates migration files (based on model changes). It looks at `models.py`, detects any changes (new model, field added, etc.) and creates a migration file inside
+```
+blog/migrations/
+    0001_initial.py
+    0002_...
+```
+It does not touch the database. It just creates Python files describing the changes. 
+Then we have (which we used before for setting up the Django project)
+```
+python manage.py migrate 
+```
+Reads all migration files and applies them to the database. Tables are created, columns are added/modified. The schema actually changes.
+
+#### Other files
+- the `__init__.py` file, which setsup the `blog/` folder as a Python package;
+- the `admin.py` file, which is where you register models to include them in the Django administration site; and
+- the `tests.py` file, where one can add tests for their application.
