@@ -1,8 +1,8 @@
+mysite/
 mysite/db.sqlite3
 my_env/
 mysite/mysite/__pycache__/
 mysite/blog/__pycache__/
 mysite/blog/migrations/__pycache__/
 drawios/
-mysite/
 building-views.md
